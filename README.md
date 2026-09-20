@@ -1,119 +1,48 @@
-# AI-Based Waste Segregation Guide ♻️
+# ♻️ AI-Based Waste Segregation Guide
 
-An AI-assisted browser-based prototype that helps users identify the appropriate category for common waste items and provides simple disposal guidance and sustainability tips.
+> An AI-assisted browser-based solution designed to help users identify waste categories and make more informed disposal decisions.
 
-## 📌 About the Project
+![Project Status](https://img.shields.io/badge/Status-Prototype-orange)
+![Technology](https://img.shields.io/badge/Technology-HTML%20%7C%20CSS%20%7C%20JavaScript-blue)
+![AI](https://img.shields.io/badge/AI-Assisted-Yes-purple)
+![SDG](https://img.shields.io/badge/SDG-12-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-Improper waste segregation is a common problem because people are often unsure about how different waste items should be disposed of.
+---
 
-The **AI-Based Waste Segregation Guide** provides a simple interface where users can enter an item such as a banana peel, newspaper, battery, plastic bottle, or old mobile phone.
+## 📌 Overview
 
-The prototype identifies the suitable waste category and provides:
+The **AI-Based Waste Segregation Guide** is a browser-based prototype developed to address a simple but important problem: people often find it difficult to determine how everyday waste should be categorized and disposed of.
 
-- Waste category
-- Classification explanation
-- Disposal guidance
-- Sustainability recommendation
-- Prototype confidence
-- Recent analysis history
-- Category analytics
-- Downloadable report
-- Dark mode
+The application allows users to enter the name or description of a waste item and provides a suggested category along with an explanation, disposal guidance, and a sustainability tip.
 
-## 🎯 Objectives
+The project focuses on making waste segregation **simple, understandable, and accessible** while demonstrating how AI-assisted development can be applied to a practical sustainability problem.
 
-- Help users understand waste categories.
-- Provide quick disposal guidance.
-- Encourage responsible waste segregation.
-- Make the classification process easy to understand.
-- Demonstrate an AI-assisted solution for a sustainability problem.
+---
 
-## 🧠 How It Works
-User Input
-    ↓
-Input Normalization
-    ↓
-Keyword Matching
-    ↓
-Curated Waste Knowledge Base
-    ↓
-Waste Classification
-    ↓
-Explanation + Disposal Guidance
-    ↓
-Sustainability Recommendation
+## 🎯 Problem Statement
 
-♻️ Waste Categories
+Improper waste segregation can occur when people are uncertain about the correct category or disposal method for an item. Food waste, recyclable materials, electronic devices, batteries, and hazardous materials may require different handling methods.
 
-The prototype supports practical categories such as:
+The project aims to provide users with quick and understandable guidance at the point of disposal through a simple browser-based interface.
 
-🟢 Wet / Organic Waste
-🔵 Dry / Recyclable Waste
-🟣 E-Waste
-🔴 Hazardous Waste
-⚪ Other / Uncertain
+---
 
-🛠️ Technologies Used
-HTML
-CSS
-JavaScript
-IBM BOB
-Curated Waste Knowledge Base
-Browser-based JavaScript
-🤖 AI Element
+## 💡 Solution
 
-The current prototype uses keyword matching against a curated waste knowledge base to provide classification and decision support.
+The application follows a straightforward decision-support workflow:
 
-The displayed confidence is a prototype estimate and not a certified AI model probability.
-
-🌱 SDG Alignment
-SDG 12 — Responsible Consumption and Production
-
-The project supports SDG 12 by promoting better waste awareness, segregation and responsible disposal decisions.
-
-Waste Awareness
-      ↓
-Better Segregation
-      ↓
-Responsible Disposal
-      ↓
-Sustainable Practices
-
-✨ Key Features
-Waste classification
-Explanation of classification
-Disposal recommendations
-Sustainability tips
-Confidence indicator
-Recent analysis history
-Category analytics
-Downloadable report
-Dark mode
-Responsive browser interface
-Responsible AI considerations
-
-👥 Target Users
-Students
-Households
-Campus communities
-Sustainability learners
-General users looking for waste-disposal guidance
-
-🔍 Example Inputs
-Try entering:
-
-Banana Peel
-Newspaper
-Plastic Bottle
-Old Mobile Phone
-Battery
-
-⚠️ Limitations
-
-This is an internship prototype based on curated data and keyword matching. Waste-management rules can vary by location, so users should verify local disposal guidelines.
-
-
-👨‍💻 Author
-Ashutosh Bhuyan
-AI for Sustainability Internship
-July–September 2026
+```text
+User enters waste item
+        ↓
+Input normalization
+        ↓
+Keyword matching
+        ↓
+Curated waste knowledge base
+        ↓
+Category identification
+        ↓
+Explanation & disposal guidance
+        ↓
+Sustainability recommendation
