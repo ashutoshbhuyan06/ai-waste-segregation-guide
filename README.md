@@ -29,8 +29,6 @@ The prototype identifies the suitable waste category and provides:
 - Demonstrate an AI-assisted solution for a sustainability problem.
 
 ## 🧠 How It Works
-
-```text
 User Input
     ↓
 Input Normalization
