@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI-Based Waste Segregation Guide</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- ── Site Header ──────────────────────────────────── -->
+      <header class="site-header">
+        <div class="site-header-text">
+          <h1>♻️ AI-Based Waste Segregation Guide</h1>
+          <p class="description">
+            Not sure where your waste belongs? This tool helps you understand how
+            common waste items can be categorized for better segregation — so you
+            can dispose of them safely and responsibly.
+          </p>
+        </div>
+        <button
+          id="themeToggleBtn"
+          class="theme-btn"
+          onclick="toggleDarkMode()"
+          aria-label="Switch to dark mode"
+        >🌙 Dark Mode</button>
+      </header>
+
+      <!-- ── Input Section ────────────────────────────────── -->
+      <section class="input-section">
+        <label for="wasteInput">Enter a waste item:</label>
+        <div class="input-row">
+          <input
+            type="text"
+            id="wasteInput"
+            placeholder="e.g. banana peel, plastic bottle, old mobile phone…"
+            autocomplete="off"
+          />
+          <button class="btn-primary" onclick="analyzeWaste()">Analyze Waste</button>
+          <button
+            id="resetBtn"
+            class="btn-reset"
+            onclick="resetAnalysis()"
+            aria-label="Clear input and start a new analysis"
+          >✕ New Analysis</button>
+        </div>
+
+        <!-- Sample chips -->
+        <div class="samples">
+          <span class="samples-label">Try these:</span>
+          <button class="sample-chip" onclick="fillSample('banana peel')">Banana Peel</button>
+          <button class="sample-chip" onclick="fillSample('plastic bottle')">Plastic Bottle</button>
+          <button class="sample-chip" onclick="fillSample('newspaper')">Newspaper</button>
+          <button class="sample-chip" onclick="fillSample('old mobile phone')">Old Mobile Phone</button>
+          <button class="sample-chip" onclick="fillSample('battery')">Battery</button>
+        </div>
+      </section>
+
+      <!-- Validation message -->
+      <p id="validationMsg" class="validation-msg" aria-live="polite"></p>
+
+      <!-- ── Classification Result Card ───────────────────── -->
+      <section id="resultCard" class="result-card hidden" aria-live="polite">
+
+        <!-- Category header -->
+        <div class="result-header">
+          <span id="categoryIcon" class="category-icon"></span>
+          <h2 id="categoryName"></h2>
+        </div>
+
+        <!-- Confidence bar -->
+        <div class="confidence-row">
+          <div class="confidence-label-row">
+            <span class="conf-title">
+              AI Confidence Score <span id="confidenceLabel"></span>
+            </span>
+            <span class="conf-note">Prototype estimate — not a certified AI prediction</span>
+          </div>
+          <div class="confidence-track">
+            <div id="confidenceBar" class="confidence-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Result details -->
+        <div class="result-body">
+          <div class="result-row">
+            <span class="result-label">📋 Reason</span>
+            <p id="resultReason"></p>
+          </div>
+          <div class="result-row">
+            <span class="result-label">🗑️ Disposal Action</span>
+            <p id="resultDisposal"></p>
+          </div>
+          <div class="result-row tip-row">
+            <span class="result-label">🌱 Sustainability Tip</span>
+            <p id="resultTip"></p>
+          </div>
+        </div>
+
+        <!-- Download Report -->
+        <div class="result-footer">
+          <button
+            id="downloadReportBtn"
+            class="btn-download"
+            onclick="downloadReport()"
+            aria-label="Download this analysis as a text report"
+          >⬇ Download Report</button>
+        </div>
+      </section>
+
+      <!-- ── Waste Analytics Dashboard ────────────────────── -->
+      <section class="analytics-section card">
+        <div class="card-header">
+          <span class="section-badge badge-green">Analytics</span>
+          <h2>Waste Analytics</h2>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card stat-total">
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-label">Total Items Analyzed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-wet">0</div>
+            <div class="stat-label">🍌 Wet / Organic</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-dry">0</div>
+            <div class="stat-label">♻️ Dry / Recyclable</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-ewaste">0</div>
+            <div class="stat-label">📱 E-Waste</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-hazardous">0</div>
+            <div class="stat-label">⚠️ Hazardous</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="stat-unknown">0</div>
+            <div class="stat-label">❓ Other / Uncertain</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Recent Analyses (History) ────────────────────── -->
+      <section id="historySection" class="history-section card">
+        <div class="card-header history-section-header">
+          <div>
+            <span class="section-badge badge-blue">History</span>
+            <h2>Recent Analyses</h2>
+          </div>
+          <button
+            id="clearHistoryBtn"
+            class="btn-clear"
+            onclick="clearHistory()"
+            aria-label="Clear classification history"
+          >🗑 Clear History</button>
+        </div>
+        <p id="historyEmpty" class="history-empty">
+          No analyses yet. Enter a waste item above to get started.
+        </p>
+        <ul id="historyList" class="history-list" aria-label="Recent analyses"></ul>
+      </section>
+
+      <!-- ── AI Decision Workflow ──────────────────────────── -->
+      <section class="workflow-section card">
+        <div class="card-header">
+          <span class="section-badge badge-blue">AI Workflow</span>
+          <h2>AI Decision Workflow</h2>
+          <p style="font-size:0.88rem;color:var(--muted);margin-top:4px;">
+            How this prototype processes your input to arrive at a classification result.
+          </p>
+        </div>
+
+        <ol class="workflow-steps" id="workflowSteps">
+          <li class="workflow-step" data-step="1">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <strong>User enters a waste item</strong>
+              <span class="step-detail" id="wf-input">Waiting for input…</span>
+            </div>
+          </li>
+          <li class="workflow-step" data-step="2">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <strong>Input is normalized</strong>
+              <span class="step-detail" id="wf-norm">Input will be lowercased and trimmed.</span>
+            </div>
+          </li>
+          <li class="workflow-step" data-step="3">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <strong>Waste description is matched against the curated knowledge base</strong>
+              <span class="step-detail" id="wf-match">Keywords will be matched against the curated knowledge base.</span>
+            </div>
+          </li>
+          <li class="workflow-step" data-step="4">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <strong>Category and confidence are determined</strong>
+              <span class="step-detail" id="wf-category">Category and confidence estimate will appear here.</span>
+            </div>
+          </li>
+          <li class="workflow-step" data-step="5">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <strong>Explanation and disposal guidance are shown</strong>
+              <span class="step-detail" id="wf-reason">Explanation will appear here after analysis.</span>
+              <span class="step-detail" id="wf-disposal">Disposal guidance will appear here after analysis.</span>
+            </div>
+          </li>
+          <li class="workflow-step" data-step="6">
+            <div class="step-number">6</div>
+            <div class="step-content">
+              <strong>Sustainability recommendation is displayed</strong>
+              <span class="step-detail" id="wf-tip">Sustainability tip will appear here after analysis.</span>
+            </div>
+          </li>
+        </ol>
+
+        <!-- Categories reference panel -->
+        <div class="categories-panel">
+          <p class="categories-panel-label">Categories this prototype classifies into:</p>
+          <div class="categories-grid">
+            <div class="cat-chip cat-wet">🍌 Wet / Organic Waste</div>
+            <div class="cat-chip cat-dry">📰 Dry / Recyclable Waste</div>
+            <div class="cat-chip cat-ewaste">📱 E-Waste</div>
+            <div class="cat-chip cat-hazardous">⚠️ Hazardous Waste</div>
+            <div class="cat-chip cat-unknown">❓ Other / Uncertain</div>
+          </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="workflow-disclaimer">
+          <span class="disclaimer-icon">ℹ️</span>
+          <p>
+            <strong>Note:</strong> This prototype demonstrates an AI-assisted decision-support
+            workflow using keyword matching against a curated knowledge base. Classification
+            results should be verified with local waste-management guidelines, especially for
+            hazardous or uncertain items.
+          </p>
+        </div>
+      </section>
+
+      <!-- ── Responsible AI Considerations ────────────────── -->
+      <section class="responsible-ai-section card">
+        <div class="card-header">
+          <span class="section-badge badge-amber">Ethics &amp; Responsibility</span>
+          <h2>Responsible AI Considerations</h2>
+        </div>
+        <div class="rai-grid">
+          <div class="rai-item">
+            <div class="rai-item-title"><span class="rai-icon">🔍</span>Transparency</div>
+            <p>Every classification comes with an explanation of why the item was placed in that category, so users always understand the reasoning.</p>
+          </div>
+          <div class="rai-item">
+            <div class="rai-item-title"><span class="rai-icon">⚖️</span>Fairness</div>
+            <p>Classification is based solely on the nature of the waste item. No personal characteristics, identity, or demographics influence the result.</p>
+          </div>
+          <div class="rai-item">
+            <div class="rai-item-title"><span class="rai-icon">🔒</span>Privacy</div>
+            <p>No personal information is required or collected. Only the waste item text and classification result are saved locally in your browser — nothing is transmitted externally.</p>
+          </div>
+          <div class="rai-item">
+            <div class="rai-item-title"><span class="rai-icon">🛡️</span>Safety</div>
+            <p>Hazardous waste items are flagged explicitly with guidance to consult certified local disposal facilities — the system does not encourage unsafe disposal practices.</p>
+          </div>
+          <div class="rai-item">
+            <div class="rai-item-title"><span class="rai-icon">📊</span>Limitation</div>
+            <p>This prototype uses keyword matching against a curated knowledge base. It may be uncertain for unfamiliar, ambiguous, or highly specific items not in the database.</p>
+          </div>
+          <div class="rai-item">
+            <div class="rai-item-title"><span class="rai-icon">📍</span>Local Verification</div>
+            <p>Waste regulations vary by city and country. Users should always verify classifications against their local municipal waste-management guidelines.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Sustainability Impact Summary ────────────────── -->
+      <section class="impact-section card">
+        <div class="card-header">
+          <span class="section-badge badge-green">Sustainability</span>
+          <h2>Sustainability Impact</h2>
+        </div>
+        <ul class="impact-list">
+          <li>
+            <span class="impact-icon">🌱</span>
+            <span><strong>Composting &amp; Organic Waste:</strong> Properly segregating wet/organic waste enables composting, returning nutrients to the soil and reducing the volume of waste sent to landfill.</span>
+          </li>
+          <li>
+            <span class="impact-icon">♻️</span>
+            <span><strong>Recycling:</strong> Separating dry recyclable materials such as paper, plastic, and metal allows these to be processed into new products, conserving raw materials and reducing manufacturing energy use.</span>
+          </li>
+          <li>
+            <span class="impact-icon">📱</span>
+            <span><strong>Responsible E-Waste Handling:</strong> Directing electronic waste to authorised recyclers prevents toxic substances from entering the environment and enables recovery of valuable metals.</span>
+          </li>
+          <li>
+            <span class="impact-icon">⚠️</span>
+            <span><strong>Safer Hazardous Waste Disposal:</strong> Correct identification and disposal of hazardous items protects water sources, soil, and communities from chemical contamination.</span>
+          </li>
+          <li>
+            <span class="impact-icon">💡</span>
+            <span><strong>Responsible Consumption:</strong> Awareness of how waste is classified encourages mindful purchasing — choosing products that are recyclable, repairable, or have minimal hazardous components.</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ── Page Footer ───────────────────────────────────── -->
+      <footer class="page-footer">
+        AI-Based Waste Segregation Guide &mdash; Internship Prototype &mdash; Runs entirely in your browser &middot; No data is sent to any server.
+      </footer>
+
+    </div><!-- /container -->
+
+    <script src="script.js"></script>
+  </body>
+</html>
